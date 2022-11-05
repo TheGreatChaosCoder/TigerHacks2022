@@ -21,9 +21,12 @@ class GameGUI:
         pygame.display.flip()
 
 class SimpleButton():
-    def __init__(self, width, height):
+    def __init__(self, width, height, text = ""):
         self.rect = pygame.Rect(width, height, 140, 32)
+        self.width = width
+        self.height = height
         self.clicked = False
+        self.text = text
 
     def isClicked(self, clicked : bool) -> None:
         self.clicked = clicked
@@ -36,6 +39,10 @@ class SimpleButton():
 
     def draw(self, r, g, b, screen : GameGUI):
         pygame.draw.rect(screen.getScreen(), (r, g, b), self.rect)
+
+        if(self.text is not None):
+            self.text.display(self.width + self.text.getSurfaceWidth(),
+                           self.height + self.text.getSurfaceHeight(), screen)
 
 class Button():
 	def __init__(self, x, y, image, scale):
@@ -80,8 +87,17 @@ class Text:
         gui.screen.blit(self.render(), (x,y))
         gui.update()
 
+    def getSurfaceWidth(self):
+        return self.render().get_width()
+    
+    def getSurfaceHeight(self):
+        return self.render().get_height()
+
     def updateText(self, msg : str) -> None:
         self.msg = msg
+
+    def updateColor(self, r, g, b) -> None:
+        self.rgb = (r, g, b)
 
 class InputBox:
     def __init__(self, x, y, w, h, msg : Text, text=''):
