@@ -10,16 +10,18 @@
     <title>camel shop</title>
 </head>
 <body class="flex flex-column align-center">
+    {% if string %}
+        <div class="fs-small standard-margin">{{ string }}</div>
+    {% endif %}
     <div class="fs-medium standard-padding">One Camel costs $40.00</div>
-    <div class="price-list">
-        <div class="standard-button fs-small">Buy 1 camel</div>
-        <div class="standard-button fs-small">Buy 10 camel</div>
-        <div class="standard-button fs-small">Buy 50 camel</div>
-        <div class="standard-button fs-small">Buy 100 camel</div>
-        <div class="standard-button fs-small">Buy 200 camel</div>
-        <div class="standard-button fs-small">Buy 500 camel</div>
-
-    </div>
+        <form method="POST" action="/camel-shop" class = "price-list">  
+            <div><input type="submit" name="camel_button" class="fs-small standard-button"  value="Buy 1 camel"></div>
+            <div><input type="submit" name="camel_button" class="fs-small standard-button"  value="Buy 10 camel"></div>
+            <div><input type="submit" name="camel_button" class="fs-small standard-button"  value="Buy 50 camel"></div>
+            <div><input type="submit" name="camel_button" class="fs-small standard-button"  value="Buy 100 camel"></div>
+            <div><input type="submit" name="camel_button" class="fs-small standard-button"  value="Buy 200 camel"></div>
+            <div><input type="submit" name="camel_button" class="fs-small standard-button"  value="Buy 500 camel"></div>
+        </form>
         <a href="#"><button class="standard-button fs-small">Buy</button></a>
     <a href="shop"><button class="fs-small standard-button">Exit to Shop</button></a>
 </body>

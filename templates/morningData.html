@@ -1,5 +1,8 @@
 {% extends "morning-menu.html" %}
 {% block content %}
+    {% if huntString %}
+    <div class="fs-small">{{ huntString }}</div>
+    {% endif %}
     {% if string %}
     <div class="fs-small">{{ string }}</div>
     {% endif %}

@@ -15,6 +15,7 @@ class Resc:
         self.exhaustion = exhaustion # Resc.exhaustion
         self.distance = distance
         self.days = days
+        self.hunt = False
 
     def displayResources(self):
         print("Resources: ")
@@ -23,6 +24,34 @@ class Resc:
         print("Camels: " + str(self.camels))
         print("Sets of Clothes: " + str(self.clothes))
         print("Bullets: " + str(self.bullets))
+
+def changeFood(amount):
+    if(amount * 5 > resourceList.money):
+        return False
+    resourceList.money -= amount * 5
+    resourceList.food += amount
+    return True
+
+def changeClothes(amount):
+    if(amount * 5 > resourceList.money):
+        return False
+    resourceList.money -= amount * 5
+    resourceList.clothes += amount
+    return True
+
+def changeBullets(amount): 
+    if(amount * 5 > resourceList.money):
+        return False
+    resourceList.money -= amount * 5
+    resourceList.bullets += amount * 20
+    return True
+
+def changeCamels(amount):
+    if(amount * 40 > resourceList.money):
+        return False
+    resourceList.money -= amount * 40
+    resourceList.camels += amount
+    return True
 
 class Rivers:
 
@@ -107,7 +136,7 @@ def resetObjects():
     resourceList.bullets = 0
     resourceList.hunger = 3
     resourceList.exhaustion= 0
-    resourceList.days = 1
+    resourceList.days = 0
     resourceList.distance = 0
 
         
@@ -182,30 +211,32 @@ def playGame():
 def fordRiver(): #this calculates if a river is forded and then changes resources if they don't
     fordOrNot= secrets.randbelow(7)
     if (fordOrNot == 5 or fordOrNot ==6):
-        print("You have forded the river")
-        distance +=30
-        return 1
+        # print("You have forded the river")
+        resourceList.distance +=30
     else:
-        print("You have not forded the river ") #make so it prints out what is lost
+        # print("You have not forded the river ") #make so it prints out what is lost
         if (secrets.randbelow(100) > 85):
-            killRandom("drowning")
+            return killRandom("drowning")
         if (secrets.randbelow(100) > 75):
-            if (resourceList.food >0):
+            if (resourceList.food > 0):
                 resourceList.food -= secrets.randbelow(resourceList.food)
+                return "You lost some food"
         if (secrets.randbelow(100) > 75):
-            if (resourceList.camels >0):
+            if (resourceList.camels > 0):
                 resourceList.camels -= secrets.randbelow(resourceList.camels)
-                if (resourceList.camels ==0):
-                    print("all of your camels have died, you lose")
-                    quit()
+                return "You lost some camels"
+                if (resourceList.camels == 0):
+                    return True
                     
         if (secrets.randbelow(100) > 75):
             if (resourceList.clothes >0):
                 resourceList.clothes -=  secrets.randbelow(resourceList.clothes)
+                return "You lost some clothes"
         if (secrets.randbelow(100) > 75):
             if (resourceList.bullets >0):
                 resourceList.bullets -= secrets.randbelow(resourceList.bullets)
-        return 100
+                return "You lost some bullets"
+        return False
 
 
 
@@ -277,9 +308,9 @@ def morningMenu(day):
 
     
         if(choice == 1):
-            if (Rivers.checkRiver()):
-                print("You must ford the river to continue")
-                print(Rivers.checkRiver())
+            if (Rivers.checkRiver(resourceList.distance)):
+                #print("You must ford the river to continue")
+                #print(Rivers.checkRiver())
                 choice = fordRiver()
               
             else:  
@@ -304,23 +335,32 @@ def morningMenu(day):
         elif(choice == 6):
             return 0
             
+def getTraveling():
+    if (Rivers.checkRiver(resourceList.distance)):
+        return fordRiver()
+    else:  
+        return 5
 
 def goHunt():
+
+    if(resourceList.bullets < 20):
+        return "You didn't have enough bullets for the Hunt"
+
 
     resourceList.bullets -= 20
 
     randNum = secrets.randbelow(100) #generates either a 0, 1, or 2
 
     if(randNum <= 35):
-        print("You weren't able to hunt down any game")
+        return "You weren't able to hunt down any game"
     elif(randNum <= 70):
-        print("You were able to capture a couple desert rabbits and harvested some fruit from cacti, worth about 50 pounds of meat")
         resourceList.food += 50
+        return "You were able to capture a couple desert rabbits and harvested some fruit from cacti, worth about 50 pounds of meat"
     elif(randNum <= 90):
-        print("You were able to hunt down a couple camels and gained 200 pounds of meat")
         resourceList.food += 100
+        return "You were able to hunt down a couple camels and gained 200 pounds of meat"
     elif(randNum <= 100):
-        killRandom("a camel trampeling them to death")
+        return killRandom("a camel trampeling them to death")
 
     
 def shopMenu():
@@ -460,17 +500,17 @@ def getAlive():
         alive.append(person4)
     return alive
 
+#returns True if everyone died, a death message otherwise
 def killRandom(deathMsg):
     alive = getAlive()
     aliveLen = len(alive)
 
-    if(aliveLen == 1):
-        print("You're entire party has died")
-        return
+    if(aliveLen == 1): 
+        return True
     
     randIndex = secrets.randbelow(aliveLen - 1)
     (alive[randIndex]).alive = False
-    print(alive[randIndex].name + " has died by " + deathMsg)
+    return (alive[randIndex].name + " has died by " + deathMsg)
     
     
 
@@ -483,8 +523,8 @@ def displayHunger():
         print("You and your friends are nourished and ready to travel")
 
 def travel():
+    return 5
     pace()
-
 
 def rest():
     print("You rested")
@@ -571,32 +611,18 @@ def check_user_input(input):
         return False
 
 
-def pace(): #This is the pace menu, lets the user select what pace they want
-    choice = 4 
-    print("\nPace Options:\n")
-    while (choice == 4): #the pace menu will loop until a valid option is selected 
-        pace = ["1-Steady", "2-Strenuous", "3-Grueling", "4-Details"]
-        for x in pace:
-            print(x)
-        choice = getInput(1, 4)
-        if (choice == 1): #the pace is steady
+def pace(choice : int): #This is the pace menu, lets the user select what pace they want
+    if (choice == 1): #the pace is steady
             # print("Your pace is now", pace[0])
-            distance +=10  #Note that distance is used instead of dist
-        elif (choice == 2): #the pace is strenuous
+        resourceList.distance +=10  #Note that distance is used instead of dist
+    elif (choice == 2): #the pace is strenuous
             # print("Your pace is now", pace[1])
-            distance +=15
-            resourceList.exhaustion +=1
-        elif (choice == 3): #the pace is grueling
+        resourceList.distance +=15
+        resourceList.exhaustion +=1
+    elif (choice == 3): #the pace is grueling
             # print("Your pace is now", pace[2])
-            distance +=20
-            resourceList.exhaustion +=2
-        elif (choice == 4): #describes each of the pace options
-            print("""This is a menu to select your pace
-            \n Steady lets you travel for about 8 hours per day. Which is around 10 miles. No exhaustion results from this.
-            \n Strenuous lets you travel for about 12 hours per day. Which is around 15 miles. At the end of the day you feel tired
-            \n Grueling lets you travel for 16 hours per day. Which is around 20 miles. At the end of the day you are exhauseted and health will suffer
-            \nPace Options:
-            """)
+        resourceList.distance +=20
+        resourceList.exhaustion +=2
         
 
 # testWindow = gui.GameGUI(500, 500)

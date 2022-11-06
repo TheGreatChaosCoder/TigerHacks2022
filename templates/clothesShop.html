@@ -10,16 +10,18 @@
     <title>clothes shop</title>
 </head>
 <body class="flex flex-column align-center">
+    {% if string %}
+        <div class="fs-small standard-margin">{{ string }}</div>
+    {% endif %}
     <div class="fs-medium standard-padding">One set of clothes costs $5.00</div>
-    <div class="price-list">
-        <div class="standard-button fs-small">Buy 1 set</div>
-        <div class="standard-button fs-small">Buy 10 sets</div>
-        <div class="standard-button fs-small">Buy 50 sets</div>
-        <div class="standard-button fs-small">Buy 100 sets</div>
-        <div class="standard-button fs-small">Buy 200 sets</div>
-        <div class="standard-button fs-small">Buy 500 sets</div>
-
-    </div>
+    <form method="POST" action="/clothesShop" class = "price-list">  
+        <div><input type="submit" name="clothes_button" class="fs-small standard-button"  value="Buy 1 set"></div>
+        <div><input type="submit" name="clothes_button" class="fs-small standard-button"  value="Buy 10 sets"></div>
+        <div><input type="submit" name="clothes_button" class="fs-small standard-button"  value="Buy 50 sets"></div>
+        <div><input type="submit" name="clothes_button" class="fs-small standard-button"  value="Buy 100 sets"></div>
+        <div><input type="submit" name="clothes_button" class="fs-small standard-button"  value="Buy 200 sets"></div>
+        <div><input type="submit" name="clothes_button" class="fs-small standard-button"  value="Buy 500 sets"></div>
+    </form>
         <a href="#"><button class="standard-button fs-small">Buy</button></a>
     <a href="shop"><button class="fs-small standard-button">Exit to Shop</button></a>
 

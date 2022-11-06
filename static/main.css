@@ -202,6 +202,10 @@ gap: var(--gap, 1rem);
     align-items: center;
     margin-block: 0.5rem;
 }
+
+#long-input{
+    width: 500px
+}
 .standard-button:hover{
     background-color: var(--clr-base-100);
     cursor: pointer;
@@ -228,7 +232,7 @@ gap: var(--gap, 1rem);
 body {
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
+    overflow: scroll;
     background-color: var(--clr-base-000);
 }
 
@@ -243,10 +247,18 @@ body {
     grid-template-columns: 
     repeat(3, 1fr);
     column-gap: 0.6rem;
-}
+} 
 .price-list .standard-button {
     width: inherit;
     padding: var(--border-width-medium);
+}
+
+input[name="camel_button"],  input[name="food_button"], input[name="bullet_button"], input[name="clothes_button"]{
+    width: 100% !important;
+}
+
+.grid-form{
+    background-color: blueviolet;
 }
 /* ----------------- */
 /*--------Id---------*/
@@ -258,4 +270,20 @@ body {
 
 #story-introduction {
     outline: var(--border-width-thin) solid var(--clr-accent-600);
+}
+
+/* ----------------- */
+/*-----animation------*/
+/* ----------------- */
+
+.text span{
+    opacity: 0;
+}
+
+.text span.revealed {
+    opacity: 1;
+}
+
+.text span.green {
+    color: var(--clr-accent-600);
 }

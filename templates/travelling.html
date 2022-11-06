@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <title>Main menu</title>
+</head>
+<body class="flex flex-column align-center">
+    <form method="POST" action="/callTraveling">  
+        <input type="submit" name="speed_button" class="fs-small standard-button" value="1. Steady">
+        <input type="submit" name="speed_button" class="fs-small standard-button" value="2. Strenuous">
+        <input type="submit" name="speed_button" class="fs-small standard-button" value="3. Grueling">
+        <input type="submit" name="speed_button" class="fs-small standard-button" value="4. Details">
+    </form>
+    {% if details %}
+        <div class="fs-small">
+            This is a menu to select your pace
+            <ul>
+                <li>Steady lets you travel for about 8 hours per day. Which is around 10 miles. No exhaustion results from this.</li>
+                <li>Strenuous lets you travel for about 12 hours per day. Which is around 15 miles. At the end of the day you feel tired</li>
+                <li>Grueling lets you travel for 16 hours per day. Which is around 20 miles. At the end of the day you are exhauseted and health will suffer</li>
+            </ul>
+        </div>
+    {% endif %}
+</body>
+</html>

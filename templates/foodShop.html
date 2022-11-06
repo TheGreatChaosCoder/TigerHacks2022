@@ -10,16 +10,18 @@
     <title>food shop</title>
 </head>
 <body class="flex flex-column align-center">
+    {% if string %}
+        <div class="fs-small standard-margin">{{ string }}</div>
+    {% endif %}
     <div class="fs-medium standard-padding">One lb of food costs $5.00</div>
-    <div class="price-list">
-        <div class="standard-button fs-small">Buy 100 food</div>
-        <div class="standard-button fs-small">Buy 200 food</div>
-        <div class="standard-button fs-small">Buy 500 food</div>
-        <div class="standard-button fs-small">Buy 1000 food</div>
-        <div class="standard-button fs-small">Buy 1500 food</div>
-        <div class="standard-button fs-small">Buy 2000 food</div>
-
-    </div>
+    <form method="POST" action="/foodShop" class = "price-list">  
+        <div><input type="submit" name="food_button" class="fs-small standard-button"  value="Buy 100 food"></div>
+        <div><input type="submit" name="food_button" class="fs-small standard-button"  value="Buy 200 food"></div>
+        <div><input type="submit" name="food_button" class="fs-small standard-button"  value="Buy 500 food"></div>
+        <div><input type="submit" name="food_button" class="fs-small standard-button"  value="Buy 1000 food"></div>
+        <div><input type="submit" name="food_button" class="fs-small standard-button"  value="Buy 1500 food"></div>
+        <div><input type="submit" name="food_button" class="fs-small standard-button"  value="Buy 2000 food"></div>
+    </form>
         <a href="#"><button class="standard-button fs-small">Buy</button></a>
     <a href="shop"><button class="fs-small standard-button">Exit to Shop</button></a>
 </body>

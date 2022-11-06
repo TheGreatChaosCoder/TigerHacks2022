@@ -6,6 +6,8 @@ import time
 import random
 import header
 
+header.resourceList.hunt = False
+
 # class Resc:
 #     def __init__(self, money, food, camels, clothes, bullets, hunger, exhaustion):
 #         self.money = money
@@ -143,7 +145,6 @@ def shop():
 
 @app.route('/camel-shop')
 def camelShop():
-    header.resourceList.distance = 100
     return render_template('camel-shop.html')
 
 @app.route('/foodShop')
@@ -157,6 +158,127 @@ def clothesShop():
 @app.route('/bulletsShop')
 def bulletsShop():
     return render_template('bulletsShop.html')
+    
+@app.route('/camel-shop', methods=['GET', 'POST'])
+def camelShopForm():
+    if request.method == 'POST':
+        if request.form['camel_button'] == "Buy 1 camel":
+            x = 1
+        elif request.form['camel_button'] == "Buy 10 camel":
+            x = 10
+        elif request.form['camel_button'] == "Buy 50 camel":
+            x = 50
+        elif request.form['camel_button'] == "Buy 100 camel":
+            x = 100
+        elif request.form['camel_button'] == "Buy 200 camel":
+            x = 200
+        elif request.form['camel_button'] == "Buy 500 camel":
+            x = 500
+
+        if not header.changeCamels(x):
+            string = f"You do not have sufficient funds to purchase {x} fine camels"
+        else:
+            string = f"You bought {x} camels"
+    return render_template('camel-shop.html', string = string)
+
+@app.route('/clothesShop', methods=['GET', 'POST'])
+def clothesShopForm():
+    if request.method == 'POST':
+        if request.form['clothes_button'] == "Buy 1 set":
+            x = 1
+        elif request.form['clothes_button'] == "Buy 10 sets":
+            x = 10
+        elif request.form['clothes_button'] == "Buy 50 sets":
+            x = 50
+        elif request.form['clothes_button'] == "Buy 100 sets":
+            x = 100
+        elif request.form['clothes_button'] == "Buy 200 sets":
+            x = 200
+        elif request.form['clothes_button'] == "Buy 500 sets":
+            x = 500
+
+        if not header.changeClothes(x):
+            string = f"You do not have sufficient funds to purchase {x} fine clothes"
+        else:
+            string = f"You bought {x} clothes"
+    return render_template('clothesShop.html', string = string)
+
+@app.route('/foodShop', methods=['GET', 'POST'])
+def foodShopForm():
+    if request.method == 'POST':
+        if request.form['food_button'] == "Buy 100 food":
+            x = 100
+        elif request.form['food_button'] == "Buy 200 food":
+            x = 200
+        elif request.form['food_button'] == "Buy 500 food":
+            x = 500
+        elif request.form['food_button'] == "Buy 1000 food":
+            x = 1000
+        elif request.form['food_button'] == "Buy 1500 food":
+            x = 1500
+        elif request.form['food_button'] == "Buy 2000 food":
+            x = 2000
+
+        if not header.changeFood(x):
+            string = f"You do not have sufficient funds to purchase {x} fine foods"
+        else:
+            string = f"You bought {x} lbs of food"
+    return render_template('foodShop.html', string = string)
+
+@app.route('/bulletsShop', methods=['GET', 'POST'])
+def bulletsShopForm():
+    if request.method == 'POST':
+        if request.form['bullet_button'] == "Buy 1 box":
+            x = 1
+        elif request.form['bullet_button'] == "Buy 10 boxes":
+            x = 10
+        elif request.form['bullet_button'] == "Buy 50 boxes":
+            x = 50
+        elif request.form['bullet_button'] == "Buy 100 boxes":
+            x = 100
+        elif request.form['bullet_button'] == "Buy 200 boxes":
+            x = 200
+        elif request.form['bullet_button'] == "Buy 500 boxes":
+            x = 500
+
+        if not header.changeBullets(x):
+            string = f"You do not have sufficient funds to purchase {x} fine bullets"
+        else:
+            string = f"You bought {x} bullets"
+    return render_template('bulletsShop.html', string = string)
+
+@app.route('/travelling')
+def travelling():
+    return render_template('travelling.html')
+
+@app.route('/hunting')
+def hunting():
+    header.resourceList.hunt = header.goHunt()
+    if(header.resourceList.hunt is True):
+        redirect(url_for('info'))
+    
+    return redirect(url_for('morningMenu'))
+
+@app.route('/callTraveling')
+def callTraveling():
+    if(header.getTraveling() == 5):
+        return redirect(url_for('travelling'))
+    #if fordRiver is called (True means that everyone is dead [go to end scene], string means someone died [display it somewhere?])
+    return render_template('travelling.html')
+
+@app.route('/callTraveling', methods=['GET', 'POST'])
+def callTravelingForm():
+    if request.method == 'POST':
+        if request.form['speed_button'] == '1. Steady':
+            header.pace(1)
+        elif request.form['speed_button'] == "2. Strenuous":
+            header.pace(2)
+        elif request.form['speed_button'] == "3. Grueling":
+            header.pace(3)
+        elif request.form['speed_button'] == "4. Details":
+            return render_template('travelling.html', details = True)
+            
+    return redirect(url_for('morningMenu'))
 
 @app.route('/callRest')
 def callRest():
@@ -165,7 +287,8 @@ def callRest():
 
 @app.route('/opening-sequence')
 def openingSequence():
-    flaskgame.resetObjects()
+    #flaskgame.resetObjects()
+    header.resetObjects()
     return render_template('opening-sequence.html')
 
 @app.route('/info')
@@ -183,6 +306,7 @@ def morningMenu():
     # header.sickCount()
     header.resourceList.days += 1
     return render_template("morningData.html",
+           huntString = header.resourceList.hunt,
            string = header.checkDist(),
            dayNumber = header.resourceList.days,
            distanceTravelled = header.resourceList.distance)

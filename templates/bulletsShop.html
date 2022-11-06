@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charboxes="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
@@ -10,16 +10,18 @@
     <title>bullet shop</title>
 </head>
 <body class="flex flex-column align-center">
+    {% if string %}
+        <div class="fs-small standard-margin">{{ string }}</div>
+    {% endif %}
     <div class="fs-medium standard-padding">A box of 20 bullets costs $5.00</div>
-    <div class="price-list">
-        <div class="standard-button fs-small">Buy 1 box</div>
-        <div class="standard-button fs-small">Buy 10 boxes</div>
-        <div class="standard-button fs-small">Buy 50 boxes</div>
-        <div class="standard-button fs-small">Buy 100 boxes</div>
-        <div class="standard-button fs-small">Buy 200 boxes</div>
-        <div class="standard-button fs-small">Buy 500 boxes</div>
-
-    </div>
+    <form method="POST" action="/bulletsShop" class = "price-list">  
+        <div><input type="submit" name="bullet_button" class="fs-small standard-button"  value="Buy 1 box"></div>
+        <div><input type="submit" name="bullet_button" class="fs-small standard-button"  value="Buy 10 boxes"></div>
+        <div><input type="submit" name="bullet_button" class="fs-small standard-button"  value="Buy 50 boxes"></div>
+        <div><input type="submit" name="bullet_button" class="fs-small standard-button"  value="Buy 100 boxes"></div>
+        <div><input type="submit" name="bullet_button" class="fs-small standard-button"  value="Buy 200 boxes"></div>
+        <div><input type="submit" name="bullet_button" class="fs-small standard-button"  value="Buy 500 boxes"></div>
+    </form>
         <a href="#"><button class="standard-button fs-small">Buy</button></a>
     <a href="shop"><button class="fs-small standard-button">Exit to Shop</button></a>
 </body>

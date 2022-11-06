@@ -245,7 +245,7 @@ def sickCount():
             if (alive[index].status == True ):
                 alive[index].sickTracker += 1
             if (alive[index].status == True and alive[index].sickTracker >=3):
-                print(alive[index].name + " is sick! rest to make them feel better")
+                print(alive[index].name + " is really sick! rest to make them feel better")
             if (alive[index].sickTracker > 3):
                 (alive[index]).alive = False
                 print(alive[index].name + " has died by illness")
@@ -255,7 +255,7 @@ def morningMenu(day):
     choice = 100
     while (choice >= 3 and choice != 5):
 
-        print("Today is day " + str(day))
+        print("\033[1;32mToday is day \033[1;37m" + str(day))
         print("You have traveled " + str(distance.total) + " miles")
         displayHunger()
 
@@ -551,6 +551,7 @@ def getInput(minMenuInput, maxMenuInput):
         if(check_user_input(menuInput) is True):
             menuInput = int(menuInput)
             if(menuInput >= minMenuInput and menuInput <= maxMenuInput):
+                print("\n\n ~~~~~~~~~~~~~~~~~~ \n\n")
                 return menuInput
         print("ERROR: Enter a number between 1 and " + str(maxMenuInput))
 
@@ -614,7 +615,7 @@ def main():
     mainMenu()
 
 
-
+main()
 
 
 
