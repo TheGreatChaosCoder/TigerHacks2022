@@ -4,19 +4,18 @@ import sqlite3
 
 def resetObjects() -> None:
     try:
-        msg = ""
+        msg = "" 
         with dbConnection() as con:
             cur = con.cursor()
-            cur.execute("TRUNCATE TABLE game")
-            cur.execute("INSERT INTO game (money, food, camels, clothes, bullets, hunger, exhaustion, total_distance, days) VALUES (?,?,?,?,?,?,?,?,?)",
-                (1600, 60000, 4, 4, 0, 3, 0, 0, 0) )
+            cur.execute("DELETE from game")
+            con.commit()
+            cur.execute("INSERT INTO game (id, money, food, camels, clothes, bullets, hunger, exhaustion, total_distance, days) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                (0, 1600, 0, 4, 4, 0, 3, 0, 0, 1) )
             con.commit()
             msg = "Reset successful"
-            return
     except:
          con.rollback()
          msg = "error in insert operation"
-         return 
     finally:
         return
         con.close()
@@ -26,7 +25,7 @@ def getGameData(data : str):
         msg = ""
         with dbConnection() as con:
             cur = con.cursor()
-            cur.execute(f"SELECT * FROM game")
+            cur.execute(f"SELECT {data} FROM game ORDER BY id ASC LIMIT 1")
             
             con.commit()
             msg = "Got data sucessfully"
@@ -36,7 +35,5 @@ def getGameData(data : str):
       
     finally:
         rows = cur.fetchall()
-        return rows
+        return rows[0][0]
         con.close()
-
-

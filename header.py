@@ -5,7 +5,7 @@ import secrets
 #Death: drowning, camel trampeling them to death, exhaustion
 
 class Resc:
-    def __init__(self, money, food, camels, clothes, bullets, hunger, exhaustion):
+    def __init__(self, money, food, camels, clothes, bullets, hunger, exhaustion, distance, days):
         self.money = money
         self.food = food
         self.camels = camels
@@ -13,6 +13,8 @@ class Resc:
         self.bullets = bullets
         self.hunger = hunger
         self.exhaustion = exhaustion # Resc.exhaustion
+        self.distance = distance
+        self.days = days
 
     def displayResources(self):
         print("Resources: ")
@@ -24,40 +26,46 @@ class Resc:
 
 class Rivers:
 
-    def __init__(self, river1, river2,river3,river4):
-        self.river1 = river1 #these numbers are the distance (in miles) from the start that the rivers occur
-        self.river2 = river2
-        self.river3 = river3
-        self.river4 = river4
-    def checkRiver():
-        if (distance.total <= checkmark.river1+10 and distance.total >= checkmark.river1-10):
+    river1 = 100
+    river2 = 1000
+    river3 = 1500 
+    river4 = 2000
+
+    def __init__(self):
+        pass
+        
+    @staticmethod
+    def checkRiver(distance):
+        if (distance <= Rivers.river1+10 and distance >= Rivers.river1-10):
             # print("You have made it to river1!")
             return True
-        elif (distance.total <= checkmark.river2+10 and distance.total >= checkmark.river2-10):
+        elif (distance <= Rivers.river2+10 and distance >= Rivers.river2-10):
             return True
-        elif (distance.total <= checkmark.river3+10 and distance.total >= checkmark.river3 -10):
+        elif (distance <= Rivers.river3+10 and distance >= Rivers.river3 -10):
             #print("you have made it to river3")
             return True
-        elif (distance.total <= checkmark.river4+10 and distance.total>= checkmark.river4 -10):
+        elif (distance <= Rivers.river4+10 and distance>= Rivers.river4 -10):
             #print("you have made it to river4")
             return True
         else:
             return False
-
+    
 class Town:
-    def __init__(self, town1, town2, town3, town4):
-        self.town1 = town1 #these numbers are the distance (in miles) from the start that the rivers occur
-        self.town2 = town2
-        self.town3 = town3
-        self.town4 = town4
-    def checkTown():
-        if (distance.total <= checkmarkTown.town1+10 and distance.total >= checkmarkTown.town1-10):
+    town1 = 250 #these numbers are the distance (in miles) from the start that the rivers occur
+    town2 = 750
+    town3 = 1250
+    town4 = 1750
+
+    def __init__(self):
+        pass
+    def checkTown(distance):
+        if (distance <= Town.town1+10 and distance >= Town.town1-10):
             return True
-        elif (distance.total <= checkmarkTown.town2+10 and distance.total >= checkmarkTown.town2-10):
+        elif (distance <= Town.town2+10 and distance >= Town.town2-10):
             return True
-        elif (distance.total <= checkmarkTown.town3+10 and distance.total >= checkmarkTown.town3 -10):
+        elif (distance <= Town.town3+10 and distance >= Town.town3 -10):
             return True
-        elif (distance.total <= checkmarkTown.town4+10 and distance.total>= checkmarkTown.town4 -10):
+        elif (distance <= Town.town4+10 and distance>= Town.town4 -10):
             return True
         else:
             return False
@@ -67,7 +75,7 @@ class Person:
     self.name = name
     self.alive = alive
     self.status = status
-    self.sickTracker = sickTracker
+    self.sickTracker= sickTracker
 
 class User:
     def __init__(self, username):
@@ -75,13 +83,13 @@ class User:
 
 class Dist: #This class defines distance
     def __init__(self, total):
-        self.total = total #total will ideally start at 0 
+        self = total #total will ideally start at 0 
         # self.speed = speed #speed
  
 
 #Global Objects
-resources = Resc(1600.00, 20, 4, 4, 0, 3,0) #money, food, camels, clothes, bullets, hunger
-distance = Dist(0)
+resourceList = Resc(1600.00, 20, 4, 4, 0, 3, 0, 0 , 1) #money, food, camels, clothes, bullets, hunger
+distance = 0
 username = User("WHERE IS JOHN")
 
 person1 = Person("JOHN", True, None, 0)
@@ -89,21 +97,18 @@ person2 = Person("NOT JOHN", True, None, 0)
 person3 = Person("DONDA ESTA JOHN", True, None, 0)
 person4 = Person("JOHN IS BEHIND YOU", True, None, 0)
 
-checkmark = Rivers(100, 1000, 1500, 2000)
-checkmarkTown = Town(250, 750, 1250, 1750)
-
 
 
 def resetObjects():
-    resources.money = 1600
-    resources.food = 60000#20
-    resources.camels = 4
-    resources.clothes = 4
-    resources.bullets = 0
-    resources.hunger = 3
-    resources.exhaustion= 0
-
-    distance.total = 0
+    resourceList.money = 1600
+    resourceList.food = 0
+    resourceList.camels = 4
+    resourceList.clothes = 4
+    resourceList.bullets = 0
+    resourceList.hunger = 3
+    resourceList.exhaustion= 0
+    resourceList.days = 1
+    resourceList.distance = 0
 
         
 def getUsername():
@@ -163,44 +168,43 @@ def playGame():
     shopMenu()
 
     code = 1
-    day = 1
     while(1):
         checkDist() #ran on backend
         eatFood() #ran on backend
         exhaust()
         sick(95)
         sickCount()
-        code = morningMenu(day)
+        code = morningMenu(resourceList.day)
         if(code == 0):
             return
-        day += 1
+        resourceList.day += 1
 
 def fordRiver(): #this calculates if a river is forded and then changes resources if they don't
     fordOrNot= secrets.randbelow(7)
     if (fordOrNot == 5 or fordOrNot ==6):
         print("You have forded the river")
-        distance.total +=30
+        distance +=30
         return 1
     else:
         print("You have not forded the river ") #make so it prints out what is lost
         if (secrets.randbelow(100) > 85):
             killRandom("drowning")
         if (secrets.randbelow(100) > 75):
-            if (resources.food >0):
-                resources.food -= secrets.randbelow(resources.food)
+            if (resourceList.food >0):
+                resourceList.food -= secrets.randbelow(resourceList.food)
         if (secrets.randbelow(100) > 75):
-            if (resources.camels >0):
-                resources.camels -= secrets.randbelow(resources.camels)
-                if (resources.camels ==0):
+            if (resourceList.camels >0):
+                resourceList.camels -= secrets.randbelow(resourceList.camels)
+                if (resourceList.camels ==0):
                     print("all of your camels have died, you lose")
                     quit()
                     
         if (secrets.randbelow(100) > 75):
-            if (resources.clothes >0):
-                resources.clothes -=  secrets.randbelow(resources.clothes)
+            if (resourceList.clothes >0):
+                resourceList.clothes -=  secrets.randbelow(resourceList.clothes)
         if (secrets.randbelow(100) > 75):
-            if (resources.bullets >0):
-                resources.bullets -= secrets.randbelow(resources.bullets)
+            if (resourceList.bullets >0):
+                resourceList.bullets -= secrets.randbelow(resourceList.bullets)
         return 100
 
 
@@ -221,21 +225,21 @@ def sick(chances):
 
 
 def exhaust():
-    if (resources.exhaustion>= 5 and resources.exhaustion <10):
+    if (resourceList.exhaustion>= 5 and resourceList.exhaustion <10):
         sick(75)
-    elif(resources.exhaustion>=10):
+    elif(resourceList.exhaustion>=10):
         sick(90)
         if(secrets.randbelow(100)>=85):
             killRandom("exhaustion")
         if(secrets.randbelow(100)>=50):
-            if (resources.camels==1):
-                resources.camels -=1
-                print ("1 camel has died from exhaustion. you have " + str(resources.camels)+ " camels left")
-            if (resources.camels >= 2):
-                resources.camels -= 2 
-                print ("2 camels have died from exhaustion. you have " + str(resources.camels)+ " camels left")
+            if (resourceList.camels==1):
+                resourceList.camels -=1
+                print ("1 camel has died from exhaustion. you have " + str(resourceList.camels)+ " camels left")
+            if (resourceList.camels >= 2):
+                resourceList.camels -= 2 
+                print ("2 camels have died from exhaustion. you have " + str(resourceList.camels)+ " camels left")
             
-            if(resources.camels ==0):
+            if(resourceList.camels ==0):
                 print("all of your camels have died, you lose")
                 quit()
 
@@ -256,7 +260,7 @@ def morningMenu(day):
     while (choice >= 3 and choice != 5):
 
         print("Today is day " + str(day))
-        print("You have traveled " + str(distance.total) + " miles")
+        print("You have traveled " + str(distance) + " miles")
         displayHunger()
 
         print("Options: ")
@@ -268,7 +272,7 @@ def morningMenu(day):
         print("6. Quit to Main Menu")
         
         
-        choice = getInput(1, 6)
+        choice = getInput(1, 5)
 
 
     
@@ -284,7 +288,7 @@ def morningMenu(day):
         elif(choice == 2):
             rest()
         elif(choice == 3):
-            resources.displayResources()
+            resourceList.displayResources()
         elif(choice == 4):
             if (Town.checkTown() or day == 1):
                 (
@@ -293,7 +297,7 @@ def morningMenu(day):
             else:
                 print("You are not at a town, so you cannot open the shop menu at this time.")
         elif(choice == 5):
-            if(resources.bullets >= 20):
+            if(resourceList.bullets >= 20):
                 goHunt()
             else:
                 print("You don't have enough bullets to go hunting")
@@ -303,7 +307,7 @@ def morningMenu(day):
 
 def goHunt():
 
-    resources.bullets -= 20
+    resourceList.bullets -= 20
 
     randNum = secrets.randbelow(100) #generates either a 0, 1, or 2
 
@@ -311,10 +315,10 @@ def goHunt():
         print("You weren't able to hunt down any game")
     elif(randNum <= 70):
         print("You were able to capture a couple desert rabbits and harvested some fruit from cacti, worth about 50 pounds of meat")
-        resources.food += 50
+        resourceList.food += 50
     elif(randNum <= 90):
         print("You were able to hunt down a couple camels and gained 200 pounds of meat")
-        resources.food += 100
+        resourceList.food += 100
     elif(randNum <= 100):
         killRandom("a camel trampeling them to death")
 
@@ -345,33 +349,33 @@ def shopMenu():
             return
 
 def foodMenu():
-    print("You currently have " + str(resources.food) + " lbs of food")
+    print("You currently have " + str(resourceList.food) + " lbs of food")
     print("Food costs $0.20 per lb")
     amount = getAmount("lbs of food", 0.2)
     print("You bought " + str(amount) + " lbs of food")
-    resources.food += amount
+    resourceList.food += amount
 
 
 def camelMenu():
-    print("You currently have " + str(resources.camels) + " camels")
+    print("You currently have " + str(resourceList.camels) + " camels")
     print("One Camel costs $40.00")
     amount = getAmount("camels", 40)
     print("You bought " + str(amount) + " camels")
-    resources.camels += amount
+    resourceList.camels += amount
 
 def clothesMenu():
-    print("You currently have " + str(resources.clothes) + " sets of clothes")
+    print("You currently have " + str(resourceList.clothes) + " sets of clothes")
     print("One set of clothes costs $5.00")
     amount = getAmount("sets of clothes", 5)
     print("You bought " + str(amount) + " sets of clothes")
-    resources.clothes += amount
+    resourceList.clothes += amount
 
 def bulletsMenu():
-    print("You currently have " + str(resources.bullets) + " bullets")
+    print("You currently have " + str(resourceList.bullets) + " bullets")
     print("Bullets costs $5.00")
     amount = getAmount("bullets", 5)
     print("You bought " + str(amount) + " bullets")
-    resources.bullets += amount
+    resourceList.bullets += amount
 
 def getAmount(item, price):  
 
@@ -380,11 +384,11 @@ def getAmount(item, price):
     while(isAmountValid == False):
         print("How many " + item + " would you like to purchase?")
         amount = getInput(0, 2000)
-        if(amount * price <= resources.money):
-            resources.money -= amount * price
+        if(amount * price <= resourceList.money):
+            resourceList.money -= amount * price
             return amount
         print("You don't have enough money for that")
-        print("You only have $" + '{:,.2f}'.format(resources.money))
+        print("You only have $" + '{:,.2f}'.format(resourceList.money))
 
     
 
@@ -403,30 +407,35 @@ def getName(num):
     
 
 def checkDist():
+
+    if(resourceList.distance >= 2000):
+        return True
     
-    if(Rivers.checkRiver()):
-        print("You have reached a river!")
-    if (Town.checkTown()):
-        print("You have reached a town!")
-    if(distance.total >= 2000):
-        print("Congratulations!")
+    if(Rivers.checkRiver(resourceList.distance)):
+        return "You have reached a river!"
+    if (Town.checkTown(resourceList.distance)):
+        return "You have reached a town!"
         printAlive()
         print("made it to TigerHacks just in time!")
         quit()
+    
+    return False
 
+#Return True if everyone died
 def eatFood():
     alive = getAlive()
 
-    if(resources.food < len(alive) * 5):
-        resources.hunger -= 1
-        if(resources.hunger <= 0):
-            printAlive()
+    if(resourceList.food < len(alive) * 5):
+        resourceList.hunger -= 1
+        if(resourceList.hunger <= 0):
+            # printAlive()
             print( "perished due to starvation")
-            quit()
+            return True
     else:
-        resources.food -= 20
-        if(resources.hunger < 3):
-            resources.hunger += 1
+        resourceList.food -= 20
+        if(resourceList.hunger < 3):
+            resourceList.hunger += 1
+    return False
 
 def printAlive():
     alive = getAlive()
@@ -466,11 +475,11 @@ def killRandom(deathMsg):
     
 
 def displayHunger():
-    if (resources.hunger == 1):
+    if (resourceList.hunger == 1):
         print("You and your friends are on the brink of starvation")
-    elif (resources.hunger == 2):
+    elif (resourceList.hunger == 2):
         print("You and your friends are a bit peckish due to a lack of food")
-    if (resources.hunger == 3):
+    if (resourceList.hunger == 3):
         print("You and your friends are nourished and ready to travel")
 
 def travel():
@@ -484,13 +493,13 @@ def rest():
             if (alive[index].status == True ):
                 if (alive[index].SickTracker>1):
                     alive[index].SickTracker -=2
-                if (alive[index].SickTracker ==1):
+                elif (alive[index].SickTracker ==1):
                     alive[index].SickTracker -=1
 
-    if (resources.exhaustion > 1):
-        resources.exhaustion -= 2
-    if (resources.exhaustion == 1):
-        resources.exhaustion -=1
+    if (resourceList.exhaustion > 1):
+        resourceList.exhaustion -= 2
+    if (resourceList.exhaustion == 1):
+        resourceList.exhaustion -=1
     
 
 
@@ -572,15 +581,15 @@ def pace(): #This is the pace menu, lets the user select what pace they want
         choice = getInput(1, 4)
         if (choice == 1): #the pace is steady
             # print("Your pace is now", pace[0])
-            distance.total +=10  #Note that distance is used instead of dist
+            distance +=10  #Note that distance is used instead of dist
         elif (choice == 2): #the pace is strenuous
             # print("Your pace is now", pace[1])
-            distance.total +=15
-            resources.exhaustion +=1
+            distance +=15
+            resourceList.exhaustion +=1
         elif (choice == 3): #the pace is grueling
             # print("Your pace is now", pace[2])
-            distance.total +=20
-            resources.exhaustion +=2
+            distance +=20
+            resourceList.exhaustion +=2
         elif (choice == 4): #describes each of the pace options
             print("""This is a menu to select your pace
             \n Steady lets you travel for about 8 hours per day. Which is around 10 miles. No exhaustion results from this.

@@ -1,5 +1,8 @@
 {% extends "morning-menu.html" %}
 {% block content %}
+    {% if string %}
+    <div class="fs-small">{{ string }}</div>
+    {% endif %}
     <div class="fs-small">today is day {{ dayNumber }}</div>
     <div class="fs-small">you have traveled {{ distanceTravelled }} miles</div>
 {% endblock content %}

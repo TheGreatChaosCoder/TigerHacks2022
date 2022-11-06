@@ -238,6 +238,16 @@ body {
     height: 3rem;
     border: none;
 }
+.price-list {
+    display: grid;
+    grid-template-columns: 
+    repeat(3, 1fr);
+    column-gap: 0.6rem;
+}
+.price-list .standard-button {
+    width: inherit;
+    padding: var(--border-width-medium);
+}
 /* ----------------- */
 /*--------Id---------*/
 /* ----------------- */
