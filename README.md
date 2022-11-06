@@ -15,5 +15,5 @@ For the teremianl version:
 To start the web server for the web version:
 - run "python3 flaskmain.py"
 
-Delete data.sqliteand run "python3 db.py" to regenerate it. This resets highscore data
+Delete data.sqlite and run "python3 db.py" to regenerate it. This resets highscore data
 
