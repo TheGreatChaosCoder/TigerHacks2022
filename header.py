@@ -136,7 +136,7 @@ def resetObjects():
     resourceList.bullets = 0
     resourceList.hunger = 3
     resourceList.exhaustion= 0
-    resourceList.days = 0
+    resourceList.days = 1
     resourceList.distance = 0
 
         

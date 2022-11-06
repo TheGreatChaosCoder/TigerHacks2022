@@ -9,8 +9,50 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <title>win screen</title>
 </head>
-<body>
-
-    
+<body class="relative-position">
+    <canvas id="canvas"></canvas>
+    <a href="https://youtu.be/dQw4w9WgXcQ"><button id="win-text" class="standard-button standard-outline standard-padding fs-big accent-text-color absolute-center">YOU WON!</button></a>
+    <img id="best-camel" src="/static/camel.gif" alt="no gif weh;">
+    <script>
+    const canvas = document.getElementById('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const context = canvas.getContext('2d');
+        const particles = [];
+        
+        
+        function draw() {
+            const particle = {
+                y: canvas.width / 2,
+                x: canvas.height / 2,
+                xvel: Math.random(),
+                yvel: Math.random(),
+                size: 7,
+            };
+        
+            particles.push(particle);
+            if(particles.length > 700) {
+                particles.shift();
+            }
+        
+            context.clearRect(0, 0, canvas.width, canvas.height);
+        
+        
+            for (let i = 0; i < particles.length; i += 1) {
+                p = particles[i];
+                context.fillStyle = 'hsl(43.3, 89%, 54%)';
+                context.beginPath();
+                context.fillRect(p.y * 2, p.x - 500, p.size, p.size); 
+                p.x += p.xvel * 2.5;
+                p.y -= p.yvel * 4;
+        
+            }
+        
+            window.requestAnimationFrame(setTimeout(draw, 10));
+        }
+        
+        window.requestAnimationFrame(draw);
+        </script>
 </body>
 </html>

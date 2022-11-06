@@ -20,6 +20,36 @@ def resetObjects() -> None:
         return
         con.close()
 
+def getHighscores():
+    try:
+        msg = "" 
+        with dbConnection() as con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM user")
+            con.commit()
+            msg = "Got highscores"
+    except:
+         con.rollback()
+         msg = "error in select operation"
+    finally:
+        return cur.fetchall()
+        con.close()
+
+def resetUsernames() -> None:
+    try:
+        msg = "" 
+        with dbConnection() as con:
+            cur = con.cursor()
+            cur.execute("DELETE from user")
+            con.commit()
+            msg = "Reset successful"
+    except:
+         con.rollback()
+         msg = "error in insert operation"
+    finally:
+        return
+        con.close()
+
 def getGameData(data : str):
     try:
         msg = ""

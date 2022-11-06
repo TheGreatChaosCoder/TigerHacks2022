@@ -225,6 +225,9 @@ gap: var(--gap, 1rem);
 .standard-outline {
     outline: var(--border-width-thin) solid var(--clr-accent-600);
 }
+.relative-position {
+    position: relative;
+}
 /* ----------------- */
 /*Main class*/
 /* ----------------- */
@@ -232,7 +235,7 @@ gap: var(--gap, 1rem);
 body {
     width: 100vw;
     height: 100vh;
-    overflow: scroll;
+    overflow: hidden;
     background-color: var(--clr-base-000);
 }
 
@@ -272,18 +275,31 @@ input[name="camel_button"],  input[name="food_button"], input[name="bullet_butto
     outline: var(--border-width-thin) solid var(--clr-accent-600);
 }
 
+#best-camel {
+    position: absolute;
+    top: 10%;
+    right: 45%;
+    transform: translate(50%, -50%);
+    animation-name: camel;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+@keyframes camel {
+0% {transform: scaleX(1);}
+25% {transform: scaleX(-1);}
+50% {transform: scaleX(1);}
+75% {transform: scaleX(-1);}
+100% {transform: scaleX(1);}
+}
+
+
+/* #win-text {
+    
+} */
 /* ----------------- */
 /*-----animation------*/
 /* ----------------- */
 
-.text span{
-    opacity: 0;
-}
-
-.text span.revealed {
-    opacity: 1;
-}
-
-.text span.green {
-    color: var(--clr-accent-600);
+#canvas {
+    background-color: black;
 }

@@ -8,93 +8,6 @@ import header
 
 header.resourceList.hunt = False
 
-# class Resc:
-#     def __init__(self, money, food, camels, clothes, bullets, hunger, exhaustion):
-#         self.money = money
-#         self.food = food
-#         self.camels = camels
-#         self.clothes = clothes
-#         self.bullets = bullets
-#         self.hunger = hunger
-#         self.exhaustion = exhaustion # Resc.exhaustion
-
-#     def displayResources(self):
-#         print("Resources: ")
-#         print("$: " + '{:,.2f}'.format(self.money))
-#         print("Food (lbs): " + str(self.food))
-#         print("Camels: " + str(self.camels))
-#         print("Sets of Clothes: " + str(self.clothes))
-#         print("Bullets: " + str(self.bullets))
-
-# class Rivers:
-#     def __init__(self, river1, river2,river3,river4):
-#         self.river1 = river1 #these numbers are the distance (in miles) from the start that the rivers occur
-#         self.river2 = river2
-#         self.river3 = river3
-#         self.river4 = river4
-#     def checkRiver():
-#         if (distance.total <= checkmark.river1+10 and distance.total >= checkmark.river1-10):
-#             # print("You have made it to river1!")
-#             return True
-#         elif (distance.total <= checkmark.river2+10 and distance.total >= checkmark.river2-10):
-#             return True
-#         elif (distance.total <= checkmark.river3+10 and distance.total >= checkmark.river3 -10):
-#             #print("you have made it to river3")
-#             return True
-#         elif (distance.total <= checkmark.river4+10 and distance.total>= checkmark.river4 -10):
-#             #print("you have made it to river4")
-#             return True
-#         else:
-#             return False
-
-# class Town:
-#     def __init__(self, town1, town2, town3, town4):
-#         self.town1 = town1 #these numbers are the distance (in miles) from the start that the rivers occur
-#         self.town2 = town2
-#         self.town3 = town3
-#         self.town4 = town4
-#     def checkTown():
-#         if (distance.total <= checkmarkTown.town1+10 and distance.total >= checkmarkTown.town1-10):
-#             return True
-#         elif (distance.total <= checkmarkTown.town2+10 and distance.total >= checkmarkTown.town2-10):
-#             return True
-#         elif (distance.total <= checkmarkTown.town3+10 and distance.total >= checkmarkTown.town3 -10):
-#             return True
-#         elif (distance.total <= checkmarkTown.town4+10 and distance.total>= checkmarkTown.town4 -10):
-#             return True
-#         else:
-#             return False
-
-# class Person:
-#   def __init__(self, name, alive, status, sickTracker):
-#     self.name = name
-#     self.alive = alive
-#     self.status = status
-#     self.sickTracker= sickTracker
-
-# class User:
-#     def __init__(self, username):
-#         self.username = username
-
-# class Dist: #This class defines distance
-#     def __init__(self, total):
-#         self.total = total #total will ideally start at 0 
-#         # self.speed = speed #speed
- 
-
-# #Global Objects
-# resourceList = Resc(1600.00, 20, 4, 4, 0, 3,0) #money, food, camels, clothes, bullets, hunger
-# distance = Dist(0)
-# username = User("WHERE IS JOHN")
-
-# person1 = Person("JOHN", True, None, 0)
-# person2 = Person("NOT JOHN", True, None, 0)
-# person3 = Person("DONDA ESTA JOHN", True, None, 0)
-# person4 = Person("JOHN IS BEHIND YOU", True, None, 0)
-
-# checkmark = Rivers(100, 1000, 1500, 2000)
-# checkmarkTown = Town(250, 750, 1250, 1750)
-
 app = Flask(__name__)
 
 def dbConnection():
@@ -107,6 +20,7 @@ def dbConnection():
 
 @app.route("/")
 def index():
+    flaskgame.resetUsernames()
     return render_template("index.html")
 
 @app.route("/options")
@@ -128,6 +42,10 @@ def chooseNames():
 @app.route('/opening-death')
 def openingDeath():
     return render_template('opening-death.html')
+
+@app.route('/winScreen')
+def winScreen():
+    return render_template('winScreen.html')
 
 @app.route('/resources')
 def resources():
@@ -271,18 +189,29 @@ def callTravelingForm():
     if request.method == 'POST':
         if request.form['speed_button'] == '1. Steady':
             header.pace(1)
+            header.resourceList.days += 1
         elif request.form['speed_button'] == "2. Strenuous":
             header.pace(2)
+            header.resourceList.days += 1
         elif request.form['speed_button'] == "3. Grueling":
             header.pace(3)
+            header.resourceList.days += 1
         elif request.form['speed_button'] == "4. Details":
             return render_template('travelling.html', details = True)
-            
+
+    if(header.resourceList.hunt is True):
+        header.resourceList.hunt = False
+    if(header.resourceList.distance>=2000):
+        return redirect(url_for('winScreen'))
+    
     return redirect(url_for('morningMenu'))
 
 @app.route('/callRest')
 def callRest():
     header.rest()
+    if(header.resourceList.hunt is True):
+        header.resourceList.hunt = False
+    header.resourceList.days += 1
     return redirect(url_for('morningMenu'))
 
 @app.route('/opening-sequence')
@@ -295,8 +224,13 @@ def openingSequence():
 def info():
     return render_template('info.html')
 
+@app.route('/highscore')
+def highscore():
+    return render_template("highscore.html", scores = flaskgame.getHighscores())
+
 @app.route('/morning-menu')
 def morningMenu():
+
     if(header.checkDist() is True):
         redirect(url_for('info'))
     if(header.eatFood() is True):
@@ -304,7 +238,6 @@ def morningMenu():
     # header.exhaust()
     # header.sick(95)
     # header.sickCount()
-    header.resourceList.days += 1
     return render_template("morningData.html",
            huntString = header.resourceList.hunt,
            string = header.checkDist(),
@@ -322,17 +255,15 @@ def usernameForm():
             
             con.commit()
             msg = "Record successfully added"
-            return redirect(url_for('openingSequence'))
     except:
          con.rollback()
          msg = "error in insert operation"
-         return redirect(url_for('openingSequence'))
       
     finally:
-        #cur = con.cursor()
-        #cur.execute("select * from user")
-        #rows = cur.fetchall()
-        #return f"<h1>{rows}</h1>"
+        # cur = con.cursor()
+        # cur.execute("select * from user order by highscore asc limit 1")
+        # rows = cur.fetchall()
+        # return f"<h1>{rows}</h1>"
         return redirect(url_for('openingSequence'))
         con.close()
 
