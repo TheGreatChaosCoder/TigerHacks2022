@@ -10,7 +10,7 @@ First, using pip, install
 - flask
 - pygame
 
-For the teremianl version:
+For the terminal version:
 - run "python3 main.py"
 
 To start the web server for the web version:
