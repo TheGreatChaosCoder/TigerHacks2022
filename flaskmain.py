@@ -20,7 +20,7 @@ def dbConnection():
 
 @app.route("/")
 def index():
-    flaskgame.resetUsernames()
+    #flaskgame.resetUsernames()
     return render_template("index.html")
 
 @app.route("/options")
@@ -46,6 +46,11 @@ def openingDeath():
 @app.route('/winScreen')
 def winScreen():
     return render_template('winScreen.html')
+
+@app.route('/looseScreen')
+def looseScreen():
+    return render_template('looseScreen.html')
+
 
 @app.route('/resources')
 def resources():
@@ -189,19 +194,31 @@ def callTravelingForm():
     if request.method == 'POST':
         if request.form['speed_button'] == '1. Steady':
             header.pace(1)
-            header.resourceList.days += 1
+            testNum = header.incrementDays()
+            if(testNum == 10):
+                return redirect(url_for("winScreen"))
+            elif(testNum == 11):
+                return redirect(url_for("looseScreen"))
         elif request.form['speed_button'] == "2. Strenuous":
             header.pace(2)
-            header.resourceList.days += 1
+            testNum = header.incrementDays()
+            if(testNum == 10):
+                return redirect(url_for("winScreen"))
+            elif(testNum == 11):
+                return redirect(url_for("looseScreen"))
         elif request.form['speed_button'] == "3. Grueling":
             header.pace(3)
-            header.resourceList.days += 1
+            testNum = header.incrementDays()
+            if(testNum == 10):
+                return redirect(url_for("winScreen"))
+            elif(testNum == 11):
+                return redirect(url_for("looseScreen"))
         elif request.form['speed_button'] == "4. Details":
             return render_template('travelling.html', details = True)
 
-    if(header.resourceList.hunt is True):
-        header.resourceList.hunt = False
+    header.resourceList.hunt = False
     if(header.resourceList.distance>=2000):
+        flaskgame.updateUserTable(header.username.username, header.resourceList.money)
         return redirect(url_for('winScreen'))
     
     return redirect(url_for('morningMenu'))
@@ -209,9 +226,12 @@ def callTravelingForm():
 @app.route('/callRest')
 def callRest():
     header.rest()
-    if(header.resourceList.hunt is True):
-        header.resourceList.hunt = False
-    header.resourceList.days += 1
+    header.resourceList.hunt = False
+    testNum = header.incrementDays()
+    if(testNum == 10):
+        return redirect(url_for("winScreen"))
+    elif(testNum == 11):
+        return redirect(url_for("looseScreen"))
     return redirect(url_for('morningMenu'))
 
 @app.route('/opening-sequence')
@@ -231,21 +251,29 @@ def highscore():
 @app.route('/morning-menu')
 def morningMenu():
 
-    if(header.checkDist() is True):
-        redirect(url_for('info'))
-    if(header.eatFood() is True):
-        redirect(url_for('options'))
+    # if(header.checkDist() is True):
+    #     redirect(url_for('info'))
+    # if(header.eatFood() == True):
+    #     return redirect(url_for("options"))
     # header.exhaust()
     # header.sick(95)
     # header.sickCount()
+    if(header.areAllAlive()):
+        return redirect(url_for("looseScreen"))
+
     return render_template("morningData.html",
            huntString = header.resourceList.hunt,
            string = header.checkDist(),
            dayNumber = header.resourceList.days,
-           distanceTravelled = header.resourceList.distance)
+           distanceTravelled = header.resourceList.distance,
+           hunger = header.displayHunger())
 
 @app.route('/username', methods=['POST'])
 def usernameForm():
+
+    if request.method == "POST":
+       username.username = request.form["username"].strip()
+    
     try:
         text = request.form['username'].strip()
         msg = ""
@@ -267,30 +295,16 @@ def usernameForm():
         return redirect(url_for('openingSequence'))
         con.close()
 
-# @app.route('/choose-names', methods=['POST'])
-# def chooseNames():
-#     try:
-#         text = request.form['username'].strip()
-#         msg = ""
-#         with dbConnection() as con:
-#             cur = con.cursor()
-#             cur.execute("INSERT INTO user (username, highscore) VALUES (?,?)",(text, 0) )
-            
-#             con.commit()
-#             msg = "Record successfully added"
-#             return redirect(url_for('openingSequence'))
-#     except:
-#          con.rollback()
-#          msg = "error in insert operation"
-#          return redirect(url_for('openingSequence'))
-      
-#     finally:
-#         cur = con.cursor()
-#         cur.execute("select * from user")
-#         rows = cur.fetchall()
-#         return f"<h1>{rows}</h1>"
-#         return redirect(url_for('openingSequence'))
-#         con.close()
+@app.route('/choose-names', methods=['POST'])
+def chooseNamesForm():
+    if request.method == "POST":
+       header.person1.name = request.form["name1"].strip()
+       header.person2.name = request.form["name2"].strip()
+       header.person3.name = request.form["name3"].strip()
+       header.person4.name = request.form["name4"].strip()
+
+       return redirect(url_for("morningMenu"))
+
 
 def shutdownServer():
     func = request.environ.get('werkzeug.server.shutdown')

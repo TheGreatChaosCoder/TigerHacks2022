@@ -25,15 +25,35 @@ def getHighscores():
         msg = "" 
         with dbConnection() as con:
             cur = con.cursor()
-            cur.execute("SELECT * FROM user")
+            cur.execute("SELECT * FROM user ORDER BY highscore DESC LIMIT 5")
             con.commit()
             msg = "Got highscores"
     except:
          con.rollback()
          msg = "error in select operation"
     finally:
-        return cur.fetchall()
+        rows = cur.fetchall()
+        print(rows)
+        return rows
         con.close()
+
+def updateUserTable(username, score):
+    try:
+        msg = "" 
+        with dbConnection() as con:
+            cur = con.cursor()
+            cur.execute(f"UPDATE user SET highscore = {score} WHERE username = {username}")
+            con.commit()
+            msg = "Update sucessful"
+    except:
+         con.rollback()
+         msg = "error in updating"
+    finally:
+        rows = cur.fetchall()
+        print(rows)
+        return rows
+        con.close()
+
 
 def resetUsernames() -> None:
     try:
@@ -55,7 +75,7 @@ def getGameData(data : str):
         msg = ""
         with dbConnection() as con:
             cur = con.cursor()
-            cur.execute(f"SELECT {data} FROM game ORDER BY id ASC LIMIT 1")
+            cur.execute(f"SELECT {data} FROM game ORDER BY id DESC LIMIT 1")
             
             con.commit()
             msg = "Got data sucessfully"

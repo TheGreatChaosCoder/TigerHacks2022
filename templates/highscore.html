@@ -11,9 +11,7 @@
 </head>
 <body class="flex flex-column align-center justify-center">
 <div class="fs-medium">High Scores: </div>
-<div class="fs-small">{{ scores }}</div>
     {% if scores %}
-        <div class="fs-small">{{ scores }}</div>
     {% for score in scores %}
         <div class="fs-small">{{ score[0] }}: {{ score[1] }}</div>
     {% endfor %}

@@ -7,14 +7,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
-    <title>Set username</title>
+    <title>win screen</title>
 </head>
-<body>
-    <div class="flex flex-column align-center standard-outline absolute-center">
-    <h1 class="fs-medium">Enter Username</h1>
-    <form action="/username" method= 'POST'>
-        <input class="name-input fs-small bg-base-alt standard-outline" name="username" type="text" maxlength=10 required>
-    </form>
-    </div>
+<body class="flex flex-column align-center justify-center">
+    <div class="fs-medium">You loose...</div>
+    <a href="/"><button class="standard-button fs-medium">Restart?</button></a>
+
 </body>
 </html>

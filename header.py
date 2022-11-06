@@ -53,6 +53,14 @@ def changeCamels(amount):
     resourceList.camels += amount
     return True
 
+def incrementDays():
+    resourceList.days += 1
+    if(checkDist() is True):
+        return 10
+    if(eatFood() is True):
+        return 11
+    return 12
+
 class Rivers:
 
     river1 = 100
@@ -118,7 +126,7 @@ class Dist: #This class defines distance
 
 #Global Objects
 resourceList = Resc(1600.00, 20, 4, 4, 0, 3, 0, 0 , 1) #money, food, camels, clothes, bullets, hunger
-distance = 0
+# distance = 0
 username = User("WHERE IS JOHN")
 
 person1 = Person("JOHN", True, None, 0)
@@ -136,7 +144,7 @@ def resetObjects():
     resourceList.bullets = 0
     resourceList.hunger = 3
     resourceList.exhaustion= 0
-    resourceList.days = 1
+    resourceList.days = 0
     resourceList.distance = 0
 
         
@@ -212,7 +220,7 @@ def fordRiver(): #this calculates if a river is forded and then changes resource
     fordOrNot= secrets.randbelow(7)
     if (fordOrNot == 5 or fordOrNot ==6):
         # print("You have forded the river")
-        resourceList.distance +=30
+        resourceList.distance +=3
     else:
         # print("You have not forded the river ") #make so it prints out what is lost
         if (secrets.randbelow(100) > 85):
@@ -344,6 +352,7 @@ def getTraveling():
 def goHunt():
 
     if(resourceList.bullets < 20):
+        print(resourceList.bullets)
         return "You didn't have enough bullets for the Hunt"
 
 
@@ -500,6 +509,9 @@ def getAlive():
         alive.append(person4)
     return alive
 
+def areAllAlive():
+    return len(getAlive()) == 0
+
 #returns True if everyone died, a death message otherwise
 def killRandom(deathMsg):
     alive = getAlive()
@@ -510,17 +522,17 @@ def killRandom(deathMsg):
     
     randIndex = secrets.randbelow(aliveLen - 1)
     (alive[randIndex]).alive = False
-    return (alive[randIndex].name + " has died by " + deathMsg)
+    return (str(alive[randIndex].name) + " has died by " + str(deathMsg))
     
     
 
 def displayHunger():
     if (resourceList.hunger == 1):
-        print("You and your friends are on the brink of starvation")
+        return "You and your friends are on the brink of starvation"
     elif (resourceList.hunger == 2):
-        print("You and your friends are a bit peckish due to a lack of food")
+        return "You and your friends are a bit peckish due to a lack of food"
     if (resourceList.hunger == 3):
-        print("You and your friends are nourished and ready to travel")
+        return "You and your friends are nourished and ready to travel"
 
 def travel():
     return 5

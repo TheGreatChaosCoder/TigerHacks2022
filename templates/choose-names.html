@@ -11,15 +11,15 @@
 </head>
 <body class="flex flex-column align-center">
     <h1 class="fs-medium">Character names</h1>
-    <form class="flex flex-column align-center" action="morning-menu">
+    <form class="flex flex-column align-center" action="choose-names" method="POST">
         <label class="fs-small" for="name1">character 1:</label>
-        <input class="name-input fs-small bg-base-alt" id="name1" type="text" maxlength="10" required>
+        <input class="name-input fs-small bg-base-alt" name="name1" type="text" maxlength="10" required>
         <label class="fs-small" for="name2">character 2:</label>
-        <input class="name-input fs-small bg-base-alt" id="name2" type="text" maxlength="10" required>
+        <input class="name-input fs-small bg-base-alt" name="name2" type="text" maxlength="10" required>
         <label class="fs-small" for="name3">character 3:</label>
-        <input class="name-input fs-small bg-base-alt" id="name3" type="text" maxlength="10" required>
+        <input class="name-input fs-small bg-base-alt" name="name3" type="text" maxlength="10" required>
         <label class="fs-small" for="name4">character 4:</label>
-        <input class="name-input fs-small bg-base-alt" id="name4" type="text" maxlength="10" required>
+        <input class="name-input fs-small bg-base-alt" name="name4" type="text" maxlength="10" required>
 
         <input class="standard-button fs-small" type="submit" value="Submit">
     </form>

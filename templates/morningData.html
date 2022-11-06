@@ -1,11 +1,12 @@
 {% extends "morning-menu.html" %}
 {% block content %}
     {% if huntString %}
-    <div class="fs-small">{{ huntString }}</div>
+    <div class="fs-small alignText">{{ huntString }}</div>
     {% endif %}
     {% if string %}
     <div class="fs-small">{{ string }}</div>
     {% endif %}
-    <div class="fs-small">today is day {{ dayNumber }}</div>
-    <div class="fs-small">you have traveled {{ distanceTravelled }} miles</div>
+    <div class="fs-small">Today is Day {{ dayNumber }}</div>
+    <div class="fs-small">You have traveled {{ distanceTravelled }} miles</div>
+    <div class="fs-small">{{hunger}}</div>
 {% endblock content %}
