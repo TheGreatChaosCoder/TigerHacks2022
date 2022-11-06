@@ -11,6 +11,7 @@ First, using pip, install
 
 For the teremianl version:
 - run "python3 main.py"
+
 To start the web server for the web version:
 - run "python3 flaskmain.py"
 
