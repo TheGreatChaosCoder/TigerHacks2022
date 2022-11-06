@@ -4,20 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <title>Main menu</title>
 </head>
-<body>
-    <div>today is day (blank)</div>
-    <div>you have traveled (blank) miles</div>
+<body class="flex flex-column align-center">
 
-    <button><a href="#">continue traveling</a></button>
-    <button><a href="#"></a>rest</button>
-    <button><a href="#"></a>resources</button>
-    <button><a href="#"></a>shop</button>
-    <button><a href="#"></a>go hunting</button>
-    <button><a href="#"></a>quit to main</button>
+
+    {% block content %}{% endblock %}
+
+    <a href="#"><button class="fs-small standard-button">Continue Traveling</button></a>
+    <a href="#"><button class="fs-small standard-button">Rest</button></a>
+    <a href="resources"><button class="fs-small standard-button">Resources</button></a>
+    <a href="shop"><button class="fs-small standard-button">Shop</button></a>
+    <a href="#"><button class="fs-small standard-button">Go Hunting</button></a>
+    <a href="/"><button class="fs-small standard-button">Quit to Main Menu</button></a>
 </body>
 </html>

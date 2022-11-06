@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type = "text/css" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
     <title>Main menu</title>
 </head>
-<body>
-    <h1 class="welcome">Welcome to tiger trails</h1>
-    <button class="choices"><a href=username>Play</a></button>
-    <button class="choices"><a href=options>Options</a></button>
-    <button class="choices"><a href="https://www.bing.com/">Exit</a></button>
+<body class="flex flex-column align-center">
+    <h1 id="welcome" class="fs-medium">Welcome to tiger trails</h1>
+    <a href="username"><button class="standard-button standard-height fs-small">Play</button></a>
+    <a href="options"><button class="standard-button standard-height fs-small">Options</button></a>
+    <a href="https://www.google.com/"><button class="standard-button standard-height fs-small">Exit</button></a>
 </body>
 </html>

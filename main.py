@@ -23,14 +23,7 @@ class Resc:
         print("Bullets: " + str(self.bullets))
 
 
-class Debuffs:
-    def __init__(self, typhoid, measles, dysentary, cholera, snakebite, brokenLeg):   
-        self.typhoid = typhoid
-        self.measles = measles
-        self.dysentary = dysentary
-        self.cholera = cholera
-        self.snakebite = snakebite
-        self.brokenLeg= brokenLeg
+
 
 
 class Rivers:
@@ -94,14 +87,14 @@ resources = Resc(1600.00, 20, 4, 4, 0, 3,0) #money, food, camels, clothes, bulle
 distance = Dist(0)
 username = User("WHERE IS JOHN")
 
-person1 = Person("JOHN", True, None)
-person2 = Person("NOT JOHN", True, None)
-person3 = Person("DONDA ESTA JOHN", True, None)
-person4 = Person("JOHN IS BEHIND YOU", True, None)
+person1 = Person("JOHN", True, None, 0)
+person2 = Person("NOT JOHN", True, None, 0)
+person3 = Person("DONDA ESTA JOHN", True, None, 0)
+person4 = Person("JOHN IS BEHIND YOU", True, None, 0)
 
 checkmark = Rivers(100, 1000, 1500, 2000)
 checkmarkTown = Town(250, 750, 1250, 1750)
-debuffs = Debuffs(.25, .25, .25, .25, .25, .25) #sets the current percentage chance of each of the debuffs
+
 
 
 def resetObjects():
@@ -115,13 +108,6 @@ def resetObjects():
 
     distance.total = 0
 
-    # typhoid, measles, dysentary, cholera, snakebite, brokenLeg
-    debuffs.typhoid = .25
-    debuffs.measles = .25
-    debuffs.dysentary = .25
-    debuffs.cholera = .25
-    debuffs.snakebite = .25
-    debuffs.brokenLeg = .25
         
 def getUsername():
     name = ""
@@ -184,6 +170,9 @@ def playGame():
     while(1):
         checkDist() #ran on backend
         eatFood() #ran on backend
+        exhaust()
+        sick(95)
+        sickCount()
         code = morningMenu(day)
         if(code == 0):
             return
@@ -200,24 +189,36 @@ def fordRiver(): #this calculates if a river is forded and then changes resource
         if (secrets.randbelow(100) > 85):
             killRandom("drowning")
         if (secrets.randbelow(100) > 75):
-            resources.food -= secrets.randbelow(resources.food)
+            if (resources.food >0):
+                resources.food -= secrets.randbelow(resources.food)
         if (secrets.randbelow(100) > 75):
-            resources.camels -= secrets.randbelow(resources.camels)
+            if (resources.camels >0):
+                resources.camels -= secrets.randbelow(resources.camels)
+                if (resources.camels ==0):
+                    print("all of your camels have died, you lose")
+                    quit()
+                    
         if (secrets.randbelow(100) > 75):
-            resources.clothes -=  secrets.randbelow(resources.clothes)
+            if (resources.clothes >0):
+                resources.clothes -=  secrets.randbelow(resources.clothes)
         if (secrets.randbelow(100) > 75):
-            resources.bullets -= secrets.randbelow(resources.bullets)
+            if (resources.bullets >0):
+                resources.bullets -= secrets.randbelow(resources.bullets)
         return 100
+
 
 
 def sick(chances):
     alive = getAlive()
     aliveLen = len(alive)
+    if(aliveLen <= 1):
+        print("Everyone died")
+        quit()
     if (secrets.randbelow(100)> chances):
         randIndex = secrets.randbelow(aliveLen - 1)
         if ((alive[randIndex]).status != True):
             (alive[randIndex]).status = True
-    print(vars(Person))
+        print(alive[randIndex].name + " is sick")
 
     
 
@@ -228,20 +229,29 @@ def exhaust():
     elif(resources.exhaustion>=10):
         sick(90)
         if(secrets.randbelow(100)>=85):
-            Resc.exhaustion("exhaustion")
+            killRandom("exhaustion")
+        if(secrets.randbelow(100)>=50):
+            if (resources.camels==1):
+                resources.camels -=1
+                print ("1 camel has died from exhaustion. you have " +str(resources.camels)+ " camels left")
+            if (resources.camels >= 2):
+                resources.camels -= 2 
+                print ("2 camels have died from exhaustion. you have " +str(resources.camels)+ " camels left")
+            
+            if(resources.camels ==0):
+                print("all of your camels have died, you lose")
+                quit()
 
-
-
-    
-    
-                
-                
-
-        
-        
-    
-
-    
+def sickCount():
+    alive = getAlive()
+    for index in range(0, len(alive) - 1):
+            if (alive[index].status == True ):
+                alive[index].sickTracker += 1
+            if (alive[index].status == True and alive[index].sickTracker >=3):
+                print(alive[index].name + " is sick! rest to make them feel better")
+            if (alive[index].sickTracker > 3):
+                (alive[index]).alive = False
+                print(alive[index].name + " has died by illness")
         
 
 def morningMenu(day):
@@ -396,6 +406,7 @@ def getName(num):
     
 
 def checkDist():
+    
     if(Rivers.checkRiver()):
         print("You have reached a river!")
     if (Town.checkTown()):
@@ -471,6 +482,21 @@ def travel():
 
 def rest():
     print("You rested")
+    alive = getAlive()
+    for index in range(0, len(alive) - 1):
+            if (alive[index].status == True ):
+                if (alive[index].SickTracker>1):
+                    alive[index].SickTracker -=2
+                if (alive[index].SickTracker ==1):
+                    alive[index].SickTracker -=1
+
+    if (resources.exhaustion > 1):
+        resources.exhaustion -= 2
+    if (resources.exhaustion == 1):
+        resources.exhaustion -=1
+    
+
+
 
 
 def openingSequence():
